@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Dearest, Trexie</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,500;1,600&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Jost:wght@400;500&display=swap" rel="stylesheet">
+
+<!--
+  ============================================================
+  HOW TO CUSTOMIZE THIS PAGE
+  ============================================================
+  Put your files in the SAME FOLDER as this html file, named:
+
+
+    bg.jpg            -> hero background image
+    photo1.jpg ... photo8.jpg   -> the memory gallery + collage photos
+    our-video.mp4     -> the video in the "A Little Film" section
+    video-poster.jpg  -> the still image shown before the video plays
+    song.mp3          -> background music for the note toggle
+
+  Everything works fine even if some files are missing — you'll
+  just see soft placeholder cards until you add the real ones.
+
+  To change the names/text: search for "Jamie" and "Alex" and the
+  letter paragraphs inside the <section class="letter"> below, and
+  edit directly.
+  ============================================================
+-->
+
+<style>
+  :root{
+    --ink: #2B1B2E;
+    --wine: #6B1E3C;
+    --rose: #C97B84;
+    --gold: #B8924B;
+    --ivory: #FBF6EC;
+    --paper: #F5ECDD;
+    --paper-shadow: rgba(43,27,46,0.18);
+    --serif-display: "Cormorant Garamond", serif;
+    --serif-body: "EB Garamond", serif;
+    --label: "Jost", sans-serif;
+  }
+
+  *{ box-sizing: border-box; }
+  html{ scroll-behavior: smooth; }
+
+  body{
+    margin:0;
+    background: var(--ivory);
+    color: var(--ink);
+    font-family: var(--serif-body);
+    overflow-x: hidden;
+  }
+
+  /* ---------- PAGE 1: LOCKED HERO (only the click opens it) ---------- */
+  body.locked{ overflow: hidden; height: 100vh; }
+
+  .letter-page{
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6rem 1.5rem 3rem;
+    position: relative;
+  }
+  .page-cue{
+    position: absolute;
+    bottom: 22px; left: 50%;
+    transform: translateX(-50%);
+    font-family: var(--label);
+    font-size: 0.65rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--wine);
+    opacity: 0.5;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
+  }
+
+  a, button{ font-family: inherit; }
+
+  .label{
+    font-family: var(--label);
+    text-transform: uppercase;
+    letter-spacing: 0.22em;
+    font-size: 0.72rem;
+    color: var(--wine);
+  }
+
+  /* ---------- MUSIC TOGGLE ---------- */
+  .music-toggle{
+    position: fixed;
+    top: 22px;
+    right: 22px;
+    z-index: 150;
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    border: 1px solid rgba(184,146,75,0.5);
+    background: rgba(251,246,236,0.9);
+    backdrop-filter: blur(6px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 6px 18px var(--paper-shadow);
+    transition: transform 0.3s ease;
+  }
+  .music-toggle:hover{ transform: scale(1.08); }
+  .music-toggle:focus-visible{ outline: 2px solid var(--wine); outline-offset: 3px; }
+  .music-toggle svg{ width: 20px; height: 20px; color: var(--wine); }
+  .music-toggle.playing svg{ animation: pulse 1.6s ease-in-out infinite; }
+  @keyframes pulse{ 0%,100%{ opacity:1; } 50%{ opacity:0.45; } }
+
+  /* ---------- HERO (page 1, fixed lock screen) ---------- */
+  .hero{
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%;
+    height: 100vh;
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 2rem 1.5rem;
+    background-image: linear-gradient(180deg, rgba(43,27,46,0.55), rgba(43,27,46,0.65)), url('bg.jpg');
+    background-size: contain;
+    background-position: center;
+    background-color: var(--ink);
+    color: var(--ivory);
+    transition: opacity 0.8s ease, visibility 0.8s ease, transform 0.8s ease;
+  }
+  .hero.closed{
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-24px);
+    pointer-events: none;
+  }
+  .hero::before{
+    content:"";
+    position:absolute; inset:0;
+    background: radial-gradient(circle at 50% 30%, rgba(201,123,132,0.25), transparent 60%);
+    pointer-events:none;
+  }
+  .hero .eyebrow{
+    color: var(--rose);
+    margin-bottom: 0.8rem;
+    z-index:1;
+  }
+  .hero h1{
+    font-family: var(--serif-display);
+    font-weight: 600;
+    font-size: clamp(2.6rem, 8vw, 5.2rem);
+    margin: 0 0 0.4rem 0;
+    z-index:1;
+    text-shadow: 0 4px 24px rgba(0,0,0,0.35);
+  }
+  .hero .since{
+    z-index:1;
+    font-style: italic;
+    font-family: var(--serif-body);
+    opacity: 0.85;
+    margin-bottom: 3rem;
+  }
+
+  /* Envelope / wax seal */
+  .envelope{
+    z-index:1;
+    cursor: pointer;
+    width: 150px;
+    height: 100px;
+    position: relative;
+    background: var(--paper);
+    border-radius: 4px;
+    box-shadow: 0 18px 40px rgba(0,0,0,0.35);
+    transition: transform 0.4s ease;
+  }
+  .envelope:hover{ transform: translateY(-4px); }
+  .envelope:focus-visible{ outline: 2px solid var(--gold); outline-offset: 4px; }
+  .envelope .flap{
+    position: absolute;
+    top:0; left:0; width:100%; height:100%;
+    background: linear-gradient(135deg, var(--wine), #4d1530);
+    clip-path: polygon(0 0, 50% 55%, 100% 0);
+    transform-origin: top;
+    transition: transform 0.6s cubic-bezier(.6,0,.4,1);
+    border-radius: 4px 4px 0 0;
+  }
+  .envelope.open .flap{ transform: rotateX(180deg); }
+  .seal{
+    position:absolute;
+    top:50%; left:50%;
+    width: 38px; height: 38px;
+    margin: -19px 0 0 -19px;
+    background: radial-gradient(circle at 35% 30%, #c98d3f, var(--gold) 70%);
+    border-radius: 50%;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.4);
+    display:flex; align-items:center; justify-content:center;
+    font-family: var(--serif-display);
+    font-weight:600; color: var(--ivory);
+    font-size: 1rem;
+    transition: opacity 0.4s ease, transform 0.4s ease;
+    z-index: 2;
+  }
+  .envelope.open .seal{ opacity:0; transform: scale(0.4) rotate(25deg); pointer-events:none; }
+  .envelope .prompt{
+    position:absolute;
+    bottom: -34px; left:0; right:0;
+    text-align:center;
+    font-family: var(--label);
+    font-size: 0.68rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(251,246,236,0.75);
+  }
+
+  /* ---------- SECTION SHELL ---------- */
+  section{
+    padding: 7rem 1.5rem;
+    max-width: 760px;
+    margin: 0 auto;
+  }
+  .section-head{ text-align:center; margin-bottom: 3rem; }
+  .section-head h2{
+    font-family: var(--serif-display);
+    font-style: italic;
+    font-weight: 500;
+    font-size: clamp(1.9rem, 4vw, 2.6rem);
+    margin: 0.6rem 0 0 0;
+    color: var(--wine);
+  }
+
+  /* ---------- LETTER ---------- */
+  .letter{
+    background: var(--paper);
+    border-radius: 2px;
+    padding: 3.5rem clamp(1.5rem, 6vw, 4.5rem);
+    box-shadow: 0 20px 60px var(--paper-shadow);
+    position: relative;
+    max-width: 720px;
+  }
+  .letter::before{
+    content:"";
+    position:absolute; left:0; top:10%; bottom:10%; width:3px;
+    background: linear-gradient(to bottom, transparent, var(--gold), transparent);
+  }
+  .letter .salutation{
+    font-family: var(--serif-display);
+    font-size: 1.7rem;
+    font-style: italic;
+    color: var(--wine);
+    margin-bottom: 1.6rem;
+  }
+  .letter p{
+    font-size: 1.18rem;
+    line-height: 1.85;
+    margin: 0 0 1.4rem 0;
+  }
+  .letter .signature{
+    margin-top: 2.2rem;
+    font-family: var(--serif-display);
+    font-style: italic;
+    font-size: 1.6rem;
+    color: var(--wine);
+  }
+  .letter .signature span{
+    display:block;
+    font-family: var(--label);
+    font-style: normal;
+    font-size: 0.7rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink);
+    opacity: 0.55;
+    margin-top: 0.3rem;
+  }
+
+  /* ---------- VIDEO ---------- */
+  .film-frame{
+    position: relative;
+    border-radius: 4px;
+    overflow: hidden;
+    box-shadow: 0 25px 60px var(--paper-shadow);
+    border: 8px solid var(--paper);
+    background: linear-gradient(135deg, #e9dcc4, #f5ecdd);
+    aspect-ratio: 9/16;
+    max-width: 420px;
+    margin: 0 auto;
+  }
+  .film-frame video{
+    width: 100%; height: 100%; object-fit: scale-down; display:block;
+    background: var(--ink);
+  }
+  .film-placeholder{
+    position:absolute; inset:0;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    gap: 0.6rem;
+    color: var(--wine);
+    text-align:center;
+    padding: 1.5rem;
+  }
+  .film-placeholder svg{ width: 42px; height:42px; opacity:0.6; }
+  .film-placeholder .ph-label{ font-family: var(--label); font-size: 0.7rem; letter-spacing:0.16em; text-transform:uppercase; opacity:0.7; }
+  .film-frame video.has-src ~ .film-placeholder{ display:none; }
+
+  /* ---------- GALLERY: one big photo + one paragraph, alternating sides ---------- */
+  .gallery{ max-width: 980px; }
+  .moments{
+    display: flex;
+    flex-direction: column;
+    gap: 4.5rem;
+  }
+  .moment{
+    display: flex;
+    align-items: start;
+    gap: 2.8rem;
+  }
+  .moment:nth-child(even){ flex-direction: row-reverse; }
+
+  .moment-photo{ flex: 1 1 50%; min-width: 0; }
+  .moment-photo .frame{
+    background: var(--paper);
+    padding: 0.9rem;
+    box-shadow: 0 20px 45px var(--paper-shadow);
+    transform: rotate(var(--r, 0deg));
+    transition: transform 0.4s ease;
+  }
+  .moment:nth-child(odd) .frame{ --r: -2deg; }
+  .moment:nth-child(even) .frame{ --r: 2deg; }
+  .moment-photo .frame:hover{ transform: rotate(0deg) scale(1.02); }
+  .moment-photo .photo-box{ aspect-ratio: 4 / 3; font-size: 0.7rem; }
+
+  .moment-text{ flex: 1 1 50%; min-width: 0; }
+  .moment-tag{
+    font-family: var(--serif-display);
+    font-style: italic;
+    font-size: 1.5rem;
+    color: var(--wine);
+    margin: 0 0 0.7rem 0;
+  }
+  .moment-text p{
+    font-size: 1.12rem;
+    line-height: 1.85;
+    margin: 0;
+    color: var(--ink);
+  }
+
+  .photo-box{
+    width:100%; aspect-ratio: 1/1;
+    background: linear-gradient(145deg, #eadfca, #f7eede);
+    display:flex; align-items:center; justify-content:center;
+    color: var(--gold);
+    font-family: var(--label);
+    font-size: 0.65rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    text-align:center;
+    background-size: cover;
+    background-position: center;
+  }
+  .photo-box span{ opacity: 0.65; padding: 0 1rem; }
+  .photo-box.loaded span{ display:none; }
+
+  @media (max-width: 700px){
+    .moment, .moment:nth-child(even){
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+    .moment-photo{ flex: none; width: 100%; }
+    .moment-text{ flex: none; width: 100%; text-align: center; }
+  }
+
+  /* ---------- REVEAL ---------- */
+  .reveal-wrap{ text-align:center; }
+  .reveal-btn{
+    background: var(--wine);
+    color: var(--ivory);
+    border: none;
+    padding: 1rem 2.4rem;
+    border-radius: 999px;
+    font-family: var(--label);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    font-size: 0.78rem;
+    cursor: pointer;
+    box-shadow: 0 14px 30px rgba(107,30,60,0.35);
+    transition: transform 0.3s ease, background 0.3s ease;
+  }
+  .reveal-btn:hover{ transform: translateY(-3px); background: #84274c; }
+  .reveal-btn:focus-visible{ outline: 2px solid var(--gold); outline-offset: 4px; }
+
+  .collage{
+    position: relative;
+    margin-top: 3.5rem;
+    min-height: 0;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.7s ease;
+  }
+  .collage.open{ max-height: 900px; }
+  .collage-inner{
+    position: relative;
+    height: 560px;
+  }
+  .collage-photo{
+    position: absolute;
+    width: 150px;
+    padding: 0.6rem 0.6rem 1.4rem 0.6rem;
+    background: var(--paper);
+    box-shadow: 0 16px 34px var(--paper-shadow);
+    opacity: 0;
+    transform: translateY(40px) rotate(0deg) scale(0.8);
+    transition: opacity 0.6s ease, transform 0.6s cubic-bezier(.2,.8,.2,1);
+  }
+  .collage.open .collage-photo{ opacity: 1; transform: translateY(0) rotate(var(--rot,0deg)) scale(1); }
+  .collage-photo .photo-box{ aspect-ratio: 1/1; }
+  .collage-caption{
+    text-align:center;
+    margin-top: 0.5rem;
+    font-family: var(--serif-display);
+    font-style: italic;
+    color: var(--wine);
+    opacity: 0;
+    transition: opacity 0.8s ease 0.4s;
+  }
+  .collage.open .collage-caption{ opacity: 1; }
+
+  footer{
+    text-align:center;
+    padding: 4rem 1.5rem 5rem;
+    font-family: var(--label);
+    font-size: 0.7rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--wine);
+    opacity: 0.6;
+  }
+
+  @media (max-width: 600px){
+    .letter{ padding: 2.4rem 1.4rem; }
+    .letter p{ font-size: 1.05rem; }
+    .collage-inner{ height: 720px; }
+    .collage-photo{ width: 120px; }
+  }
+/* Mobile Phones */
+@media (max-width: 480px) {
+
+  .hero h1 {
+    font-size: clamp(2rem, 12vw, 3rem);
+  }
+
+  .hero .eyebrow {
+    font-size: 0.6rem;
+  }
+
+  .hero .since {
+    font-size: 0.9rem;
+  }
+
+  .envelope {
+    width: 120px;
+    height: 80px;
+  }
+
+  .seal {
+    width: 34px;
+    height: 34px;
+    margin: -17px 0 0 -17px;
+  }
+
+  .letter {
+    padding: 2rem 1rem;
+  }
+
+  .letter .salutation {
+    font-size: 1.4rem;
+  }
+
+  .letter p {
+    font-size: 1rem;
+    line-height: 1.7;
+  }
+
+  .letter .signature {
+    font-size: 1.3rem;
+  }
+
+  .section-head h2 {
+    font-size: 1.8rem;
+  }
+
+  .moment-tag {
+    font-size: 1.3rem;
+  }
+
+  .moment-text p {
+    font-size: 1rem;
+  }
+
+  .reveal-btn {
+    width: 100%;
+    max-width: 300px;
+  }
+
+  .collage-inner {
+    height: 1000px;
+  }
+
+  .collage-photo {
+    width: 100px;
+  }
+
+  .music-toggle {
+    width: 44px;
+    height: 44px;
+    top: 12px;
+    right: 12px;
+  }
+}
+</style>
+</head>
+<body>
+
+  <!-- MUSIC TOGGLE -->
+  <button class="music-toggle" id="musicToggle" aria-label="Play our song" aria-pressed="false">
+    <svg id="noteIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M9 18V5l12-2v13"></path>
+      <circle cx="6" cy="18" r="3"></circle>
+      <circle cx="18" cy="16" r="3"></circle>
+    </svg>
+  </button>
+  <audio id="bgm" loop preload="none">
+    <source src="song.mp3" type="audio/mpeg">
+  </audio>
+
+  <!-- PAGE 1: HERO (locked — only the click opens it) -->
+  <header class="hero" id="hero">
+    <p class="eyebrow label">A letter for my Lovely</p>
+    <h1>Trexie</h1>
+    <p class="since">Happy 1st Anniversary!</p>
+
+    <div class="envelope" id="envelope" tabindex="0" role="buttonS" aria-label="Open the letter">
+      <div class="flap"></div>
+      <div class="seal">T</div>
+      <p class="prompt">CLICK ME!!!</p>
+    </div>
+  </header>
+
+  <!-- PAGE 2 and onward: LETTER + everything else -->
+  <section class="letter-page" id="letterSection">
+      <article class="letter">
+        <p class="salutation">My Dearest, Trexie</p>
+        <p>Happy 1st Anniversary, mahal ko! My heart is so full at sobra sobra ang saya na nararamdaman ko knowing na ikaw ang kasama ko at nakaabot tayo sa ganito. 
+          We've been through so many phases of our lives and yet, here we are. Nag mamahalan nang sobra sobra at binibigay ang lahat for us. 
+          I know na marami pa tayong pag dadaanan at alam ko na alam mo rin na malulutas natin 'yon ng sabay at lahat ng 'yon ay malalampasan natin.
+          Lahat ng 'yon ay nagawa natin dahil palagi nating pinipili ang isa't isa. Palagi nating iniibig ang isa't isa sa kahit na anong paraan. 
+          Mahal na mahal kita, Trexie hindi dahil sa mahal mo rin ako kundi mahal kita dahil sa pagiging ikaw. </p>
+        <p>Sa loob ng isang taon, ang dami kong natutuhan. Natutuhan ko ang mga bagay na ayaw at gusto mo, kung ano ang mga paborito mo,
+          kung gaano mo ka ayaw mag lakad lalo na kung malayo at mainit, kung gaano mo ka gusto ang mango heyhey at chicken skin,
+          kung gaano mo ka ayaw sa amoy ng usok, kung gaano mo ka gusto ang mag explore sa mga bagay bagay at hindi lang yon.
+          Natutuhan ko rin kung paano ka mahalin. Kung paano mahalin ang nag-iisang Trexie sa buhay ko.
+          Natutuhan ko rin kung paano ko ba dapat mahalin ang sarili ko at kung paano nga ba ako lumaban sa mga laban ko sa buhay.
+          lahat ng yon natutuhan ko kasama ka. At, higit sa lahat, <strong>mas minahal mo ako sa kung gaano ko kamahal ang sarili ko</strong>.</p>
+        <p>Aking sinta. Ikaw ang mag sisilbing pahinga at kalakasan ko sa kahit na anumang unos ang dumaan. 
+          Kahit sino pa ang humarap ay walang makapapantay dahil ikaw yan, mahal ko. Ikaw ang aking simula hanggang sa wakas nitong buhay. 
+          Kahit pa gaano kalaki ang alon sa buhay natin, kahit gaano pa kalakas ang mga kidlat at kulog o kahit na dumating tayo sa pinaka mahirap na sitwasyon ng ating buhay.
+          Pangako, ikaw at ikaw, sayo at sayo lang ako. Tayo hanggang sa makamit natin ang mga pangako na'tin sa buhay, tayo at tayo hanggang sa kahuli-hulihang hininga ng ating buhay.</p>
+          <p>You will always be my baby at ang nag-iisang Trexie May Heramis Gallardo ng buhay ko. I love you, Madam!</p> 
+          <p>Happy 1st Year with you!</p>
+        <p class="signature">Faithfully yours,<span>Stanley</span></p>
+      </article>
+    </div>
+  </section>
+
+  <!-- VIDEO -->
+  <section class="film">
+    <div class="section-head">
+      <h2>Short Memories Of Us</h2>
+    </div>
+    <div class="film-frame">
+      <video id="ourVideo" controls preload="metadata" poster="video-poster.jpg" playsinline>
+        <source src="our-video.mp4" type="video/mp4">
+      </video>
+      <div class="film-placeholder" id="filmPlaceholder">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="2" y="5" width="15" height="14" rx="2"></rect><path d="M22 8.5 17 11v2l5 2.5z"></path></svg>
+        <p class="ph-label">Add our-video.mp4 to this folder</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- GALLERY -->
+  <section class="gallery">
+    <div class="section-head">
+      <p class="label">Pieces Of Us</p>
+      <h2>Our Moments</h2>
+    </div>
+    <div class="moments" id="galleryGrid">
+      <div class="moment">
+        <div class="moment-photo"><div class="frame"><div class="photo-box" data-src="photo1.jpg"><span>photo1.jpg</span></div></div></div>
+        <div class="moment-text">
+          <p class="moment-tag">Our First Meet</p>
+          <br>
+          <p>Ito yung araw na biglaan. nag kaasaran nung una, nagtatawanan kami naman ng mga kaibigan ko'y nag-iinom habang tayo'y nag-aakitan na mag kita. 
+            Alam mo yung feeling na handa kong iwan mga to makita lang kita. Hindi ako nag dalawang isip na iwan sila kasi that's our opportunity to meet.
+            Ang makita ka ay aking inaasam. At, hindi lang natapos do'n. araw-araw kong inaasam ang presensya mo at araw-araw kong sinisikhay ang pag mamahal mo.</p>
+        </div>
+      </div>
+
+      <div class="moment">
+        <div class="moment-photo"><div class="frame"><div class="photo-box" data-src="photo2.jpg"><span>photo2.jpg</span></div></div></div>
+        <div class="moment-text">
+          <p class="moment-tag">First Hangout</p>
+          <br>
+          <p>Worth the risk</p>
+          <p>Unang beses ko pa lang ang may iuwi sa bahay at ipakilala sa pamilya. Nang mga araw na iyon ako ay kabado.
+            Pero habang ang byahe mo'y papalapit nang papalapit, hindi ako nakakaramdam ng kaba. Ang nararamdaman ko ay saya at pananabik dahil makikita na uli kita. 
+            Lahat ng kaba ko ay nawala at napalitan ng saya hanggang sa nandito ka na, at naenjoy natin ang presence ng isa't isa. Hindi ako nag kamali na ipakilala ka, mahal ko.
+          </p>
+        </div>
+      </div>
+
+      <div class="moment">
+        <div class="moment-photo"><div class="frame"><div class="photo-box" data-src="photo3.jpg"><span>photo3.jpg</span></div></div></div>
+        <div class="moment-text">
+          <p class="moment-tag">First Adventure</p>
+          <br>
+          <p>Hindi ko mawari na gano'n pala ako katakot sa heights o sa hanging bridge habang malakas ang hangin. Hindi ko rin akalain na gano'n ako kakabahan at mamumutla
+            pero mas na pag tanto ko na mas takot ako na mawala ka sa buhay ko kesa sa lalim o taas sa kung saan tayo.</p>
+        </div>
+      </div>
+
+      <div class="moment">
+        <div class="moment-photo"><div class="frame"><div class="photo-box" data-src="photo4.jpg"><span>photo4.jpg</span></div></div></div>
+        <div class="moment-text">
+          <p class="moment-tag">First Birthday of my Baby</p>
+          <br>
+          <p>Ang espesyal na araw mo ay siya ring espesyal ng buhay ko.</p> 
+          <br>
+          <p>Hindi ko lubos akalain na ganito pala ang pakiramdam ng mag bigay ng bulaklak. Masaya, excited, at proud. 
+            Habang hawak ko ang bulaklak, ako'y nakangiti. Iniisip ko, na kung gaano kaganda ang mga bulaklak na hawak ko no'n ay siya rin ang ganda mo. 
+            Eh paano pa kaya kung hawak mo ang mga 'yon? Edi lubos na ang ganda mo. Habang ako ay humihinga, may taong lagi kang aalayan ng bulaklak, just because o may okasyon man.</p>
+      </div>
+      </div>
+
+      <div class="moment">
+        <div class="moment-photo"><div class="frame"><div class="photo-box" data-src="photo5.jpg"><span>photo5.jpg</span></div></div></div>
+        <div class="moment-text">
+          <p class="moment-tag">My first Birthday</p>
+          <br>
+          <p>May excited pala sa kaarawan ko.</p>
+          <br>
+          <p>Ang kaarawan ko ay isa lamang normal na araw para sa'kin. Pero nang dumating ka, nag-iba ang ihip ng hangin. Ginawa mong espesyal na araw ang kaarawan ko.
+            Hindi ko akalain na may regalo kang pinag laanan mo ng oras at pera. Sobrang tuwa, saya, kilig, at naiiyak ang naramdaman ko noong inilabas mo ang surpresa mo.
+            Kasi para sa akin, ikaw na nandiyan sa tabi ko ay masaya na ako at wala na kong hihilingin pang iba. Nang dahil sayo, first time ko naging masaya at excited sa kaarawan ko.
+          </p>
+        </div>
+      </div>
+
+      <div class="moment">
+        <div class="moment-photo"><div class="frame"><div class="photo-box" data-src="photo6.jpg"><span>photo6.jpg</span></div></div></div>
+        <div class="moment-text">
+          <p class="moment-tag">First photoshoot</p>
+          <br>
+          <p>I will be your number 1 supporter of all time</p>
+          <br>
+          <p>Anumang parte ng buhay mo, nariyan ako palagi. Hinding hindi ako mag sasawang supportahan ka lalong lalo na sa pangarap mo.
+            Proud ako sa'yo, maliit o malaki, natalo ka? Proud ako sa'yo. Nanalo ka? Proud ako sa'yo. Kahit ano pa man ang mangyari sa buhay mo, palagi akong proud sa'yo.
+            Kung sa tingin mo na nang liliit ka sa sarili mo o sa tingin mong hindi mo kaya? Nandito ako, ipapaalala saiyo kung gaano ka kagaling, gaano ka kapursige sa isang bagay,
+            gaano ka creative at kung gaano kagaling umandar ang iyong utak pag dating sa mga bagay bagay.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SURPRISE REVEAL -->
+  <section class="reveal-wrap">
+    <div class="section-head">
+      <p class="label">Oops! Meron paaa!</p>
+      <h2>Pictures of us ; p</h2>
+    </div>
+    <button class="reveal-btn" id="revealBtn">Tap to Reveal</button>
+
+    <div class="collage" id="collage">
+      <div class="collage-inner" id="collageInner">
+        <!-- positions are set inline via style for a scattered look -->
+        <div class="collage-photo" data-src="photo7.jpg" style="--rot:-8deg; top:10px; left:4%;"><div class="photo-box"><span>photo7.jpg</span></div></div>
+        <div class="collage-photo" data-src="photo8.jpg" style="--rot:6deg; top:60px; left:26%;"><div class="photo-box"><span>photo8.jpg</span></div></div>
+        <div class="collage-photo" data-src="photo9.jpg" style="--rot:-4deg; top:20px; left:50%;"><div class="photo-box"><span>photo9.jpg</span></div></div>
+        <div class="collage-photo" data-src="photo10.jpg" style="--rot:9deg; top:80px; left:72%;"><div class="photo-box"><span>photo10.pg</span></div></div>
+        <div class="collage-photo" data-src="photo11.jpg" style="--rot:5deg; top:300px; left:4%;"><div class="photo-box"><span>photo11.jpg</span></div></div>
+        <div class="collage-photo" data-src="photo12.jpg" style="--rot:-7deg; top:330px; left:26%;"><div class="photo-box"><span>photo12.jpg</span></div></div>
+        <div class="collage-photo" data-src="photo13.jpg" style="--rot:4deg; top:290px; left:50%;"><div class="photo-box"><span>photo13.jpg</span></div></div>
+        <div class="collage-photo" data-src="photo14.jpg" style="--rot:-5deg; top:340px; left:72%;"><div class="photo-box"><span>photo14.jpg</span></div></div>
+      </div>
+      <p class="collage-caption">Favorite part of us!</p>
+    </div>
+  </section>
+
+  <footer>For my Lovely Baby, Trexie</footer>
+
+  <script>
+
+   // Page 1 is locked: no scrolling until the envelope is clicked
+document.body.classList.add('locked');
+
+// Music toggle
+const musicBtn = document.getElementById('musicToggle');
+const bgm = document.getElementById('bgm');
+musicBtn.addEventListener('click', () => {
+  if(bgm.paused){
+    bgm.play().catch(() => {});
+    musicBtn.classList.add('playing');
+    musicBtn.setAttribute('aria-pressed', 'true');
+  } else {
+    bgm.pause();
+    musicBtn.classList.remove('playing');
+    musicBtn.setAttribute('aria-pressed', 'false');
+  }
+});
+
+// Envelope open/close
+const envelope = document.getElementById('envelope');
+const hero = document.getElementById('hero');
+
+function openEnvelope(){
+  if(envelope.classList.contains('open')) return;
+  envelope.classList.add('open');
+  setTimeout(() => {
+    hero.classList.add('closed');
+    document.body.classList.remove('locked');
+    document.getElementById('letterSection').scrollIntoView({ behavior: 'smooth' });
+  }, 700);
+
+  // Start music on envelope open
+  bgm.play().then(() => {
+    musicBtn.classList.add('playing');
+    musicBtn.setAttribute('aria-pressed', 'true');
+  }).catch(() => {});
+}
+envelope.addEventListener('click', openEnvelope);
+envelope.addEventListener('keydown', (e) => {
+  if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); openEnvelope(); }
+});
+
+// Video: detect if real source exists
+const video = document.getElementById('ourVideo');
+const filmPlaceholder = document.getElementById('filmPlaceholder');
+video.addEventListener('loadedmetadata', () => {
+  video.classList.add('has-src');
+  filmPlaceholder.style.display = 'none';
+});
+video.addEventListener('error', () => { filmPlaceholder.style.display = 'flex'; });
+
+// Video <-> music handoff
+let wasMusicPlaying = false;
+
+function resumeMusicIfNeeded(){
+  if(wasMusicPlaying){
+    bgm.play().catch(() => {});
+    musicBtn.classList.add('playing');
+    musicBtn.setAttribute('aria-pressed', 'true');
+  }
+}
+
+video.addEventListener('play', () => {
+  wasMusicPlaying = !bgm.paused;
+  if(wasMusicPlaying){
+    bgm.pause();
+    musicBtn.classList.remove('playing');
+    musicBtn.setAttribute('aria-pressed', 'false');
+  }
+});
+
+video.addEventListener('pause', resumeMusicIfNeeded);
+video.addEventListener('ended', resumeMusicIfNeeded);
+
+// Photos: load real images if present, else keep placeholder label
+function hydratePhotos(selector){
+  document.querySelectorAll(selector).forEach(box => {
+    const src = box.getAttribute('data-src') || box.closest('[data-src]')?.getAttribute('data-src');
+    if(!src) return;
+    const img = new Image();
+    img.onload = () => {
+      box.style.backgroundImage = `url('${src}')`;
+      box.classList.add('loaded');
+    };
+    img.onerror = () => {};
+    img.src = src;
+  });
+}
+hydratePhotos('.photo-box');
+
+// Reveal collage
+const revealBtn = document.getElementById('revealBtn');
+const collage = document.getElementById('collage');
+revealBtn.addEventListener('click', () => {
+  const opening = !collage.classList.contains('open');
+  collage.classList.toggle('open');
+  revealBtn.textContent = opening ? 'Hide' : 'Tap to Reveal';
+  if(opening){
+    setTimeout(() => collage.scrollIntoView({ behavior:'smooth', block:'center' }), 200);
+  }
+});
+  </script>
+</body>
+</html>
